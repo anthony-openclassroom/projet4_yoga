@@ -1,9 +1,10 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
+    "types": ["cypress", "node"],
     "isolatedModules": false
   },
-  "include": [
-    "../node_modules/cypress"
-  ]
+  "include": ["**/*.ts"],
+  "exclude": []
 }
