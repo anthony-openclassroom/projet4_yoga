@@ -1,17 +1,10 @@
-import { HttpClientModule } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {  ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute, Router } from '@angular/router';
 import { expect } from '@jest/globals';
+import { of } from 'rxjs';
 import { SessionService } from 'src/app/core/service/session.service';
 import { SessionApiService } from '../../../../core/service/session-api.service';
+import { TeacherService } from '../../../../core/service/teacher.service';
 
 import { FormComponent } from './form.component';
 
@@ -20,33 +13,39 @@ describe('FormComponent', () => {
   let fixture: ComponentFixture<FormComponent>;
 
   const mockSessionService = {
-    sessionInformation: {
-      admin: true
-    }
-  }
+    sessionInformation: { admin: true }
+  };
+
+  const mockSessionApiService = {
+    detail: () => of({}),
+    create: () => of({}),
+    update: () => of({}),
+  };
+
+  const mockTeacherService = {
+    all: () => of([]),
+  };
+
+  const mockRouter = {
+    navigate: () => {},
+    url: '/sessions/create',
+  };
+
+  const mockActivatedRoute = {
+    snapshot: { paramMap: { get: () => null } }
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-
-      imports: [
-        RouterTestingModule,
-        HttpClientModule,
-        MatCardModule,
-        MatIconModule,
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatSnackBarModule,
-        MatSelectModule,
-        BrowserAnimationsModule
-      ],
+      imports: [FormComponent],
       providers: [
         { provide: SessionService, useValue: mockSessionService },
-        SessionApiService
+        { provide: SessionApiService, useValue: mockSessionApiService },
+        { provide: TeacherService, useValue: mockTeacherService },
+        { provide: Router, useValue: mockRouter },
+        { provide: ActivatedRoute, useValue: mockActivatedRoute },
       ],
-      declarations: [FormComponent]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FormComponent);
     component = fixture.componentInstance;
