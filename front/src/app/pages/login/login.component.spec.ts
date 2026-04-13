@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { expect } from '@jest/globals';
 import { of } from 'rxjs';
 import { AuthService } from '../../core/service/auth.service';
-import { SessionService } from 'src/app/core/service/session.service';
+import { SessionService } from '../../core/service/session.service';
 
 import { LoginComponent } from './login.component';
 

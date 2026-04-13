@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { expect } from '@jest/globals';
 import { of } from 'rxjs';
-import { SessionService } from 'src/app/core/service/session.service';
+import { SessionService } from '../../../../core/service/session.service';
 import { SessionApiService } from '../../../../core/service/session-api.service';
 import { TeacherService } from '../../../../core/service/teacher.service';
 

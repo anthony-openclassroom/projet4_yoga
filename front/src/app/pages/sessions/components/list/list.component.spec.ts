@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { expect } from '@jest/globals';
 import { of } from 'rxjs';
-import { SessionService } from 'src/app/core/service/session.service';
+import { provideRouter } from '@angular/router';
+import { SessionService } from '../../../../core/service/session.service';
 import { SessionApiService } from '../../../../core/service/session-api.service';
 
 import { ListComponent } from './list.component';
@@ -22,6 +23,7 @@ describe('ListComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ListComponent],
       providers: [
+        provideRouter([]),
         { provide: SessionService, useValue: mockSessionService },
         { provide: SessionApiService, useValue: mockSessionApiService },
       ],
