@@ -5,7 +5,6 @@ import com.openclassrooms.starterjwt.exception.NotFoundException;
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.SessionRepository;
-import com.openclassrooms.starterjwt.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,11 +14,11 @@ import java.util.stream.Collectors;
 public class SessionService {
     private final SessionRepository sessionRepository;
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public SessionService(SessionRepository sessionRepository, UserRepository userRepository) {
+    public SessionService(SessionRepository sessionRepository, UserService userService) {
         this.sessionRepository = sessionRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     public Session create(Session session) {
@@ -45,7 +44,7 @@ public class SessionService {
 
     public void participate(Long id, Long userId) {
         Session session = this.sessionRepository.findById(id).orElse(null);
-        User user = this.userRepository.findById(userId).orElse(null);
+        User user = this.userService.findById(userId);
         if (session == null || user == null) {
             throw new NotFoundException();
         }
