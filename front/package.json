@@ -8,7 +8,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "e2e:ci": "ng run yoga:e2e-ci",
-    "e2e:coverage": "npx nyc report --reporter=lcov --reporter=text-summary",
+    "e2e:coverage": "npx nyc report",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run"
   },
@@ -28,6 +28,29 @@
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
+  },
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "all": true,
+    "include": [
+      "src/app/**/*.ts"
+    ],
+    "exclude": [
+      "src/app/**/*.spec.ts",
+      "src/app/**/*.module.ts",
+      "src/environments/**"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary",
+      "html"
+    ],
+    "report-dir": "coverage/e2e",
+    "check-coverage": true,
+    "statements": 80,
+    "branches": 80,
+    "functions": 80,
+    "lines": 80
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "^19.0.1",
