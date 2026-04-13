@@ -23,7 +23,8 @@ describe('Login', () => {
     cy.intercept('GET', '/api/session', []).as('sessions');
 
     cy.get('input[formControlName=email]').type('yoga@studio.com');
-    cy.get('input[formControlName=password]').type('test!1234{enter}');
+    cy.get('input[formControlName=password]').type('test!1234');
+    cy.get('button[type=submit]').contains('Submit').click();
 
     cy.url().should('include', '/sessions');
   });
@@ -35,7 +36,8 @@ describe('Login', () => {
     }).as('loginFailed');
 
     cy.get('input[formControlName=email]').type('wrong@email.com');
-    cy.get('input[formControlName=password]').type('wrongpassword{enter}');
+    cy.get('input[formControlName=password]').type('wrongpassword');
+    cy.get('button[type=submit]').contains('Submit').click();
 
     cy.get('.error').should('be.visible');
   });
@@ -43,5 +45,30 @@ describe('Login', () => {
   it('lien Register dans la navbar — redirige vers /register', () => {
     cy.contains('Register').click();
     cy.url().should('include', '/register');
+  });
+});
+
+describe('Logout', () => {
+  it('déconnexion — redirige vers la page d\'accueil', () => {
+    cy.intercept('POST', '/api/auth/login', {
+      body: {
+        id: 1,
+        username: 'yoga@studio.com',
+        firstName: 'Admin',
+        lastName: 'User',
+        admin: false,
+      },
+    }).as('loginRequest');
+
+    cy.intercept('GET', '/api/session', []).as('sessions');
+
+    cy.visit('/login');
+    cy.get('input[formControlName=email]').type('yoga@studio.com');
+    cy.get('input[formControlName=password]').type('test!1234');
+    cy.get('button[type=submit]').contains('Submit').click();
+    cy.url().should('include', '/sessions');
+
+    cy.contains('Logout').click();
+    cy.url().should('include', '/login');
   });
 });

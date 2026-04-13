@@ -15,10 +15,9 @@ Cypress.Commands.add('login', (admin = false) => {
     },
   }).as('loginRequest');
 
-  cy.intercept('GET', '/api/session', []).as('sessions');
-
   cy.visit('/login');
   cy.get('input[formControlName=email]').type('yoga@studio.com');
-  cy.get('input[formControlName=password]').type('test!1234{enter}');
+  cy.get('input[formControlName=password]').type('test!1234');
+  cy.get('button[type=submit]').contains('Submit').click();
   cy.url().should('include', '/sessions');
 });

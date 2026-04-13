@@ -21,9 +21,8 @@ const mockTeacher = {
 
 describe('Sessions — liste', () => {
   it('utilisateur admin — affiche la liste et le bouton Créer', () => {
-    cy.login(true);
-
     cy.intercept('GET', '/api/session', [mockSession]).as('sessions');
+    cy.login(true);
 
     cy.contains('Rentals available').should('be.visible');
     cy.contains('Morning Yoga').should('be.visible');
@@ -31,9 +30,8 @@ describe('Sessions — liste', () => {
   });
 
   it('utilisateur non-admin — pas de bouton Créer', () => {
-    cy.login(false);
-
     cy.intercept('GET', '/api/session', [mockSession]).as('sessions');
+    cy.login(false);
 
     cy.contains('Rentals available').should('be.visible');
     cy.get('button').contains('Create').should('not.exist');
@@ -44,9 +42,9 @@ describe('Sessions — liste', () => {
 
 describe('Sessions — détail', () => {
   it('admin — affiche le détail et le bouton Delete', () => {
+    cy.intercept('GET', '/api/session', [mockSession]).as('sessions');
     cy.login(true);
 
-    cy.intercept('GET', '/api/session', [mockSession]).as('sessions');
     cy.intercept('GET', '/api/session/1', mockSession).as('sessionDetail');
     cy.intercept('GET', '/api/teacher/1', mockTeacher).as('teacher');
 
@@ -58,9 +56,9 @@ describe('Sessions — détail', () => {
   });
 
   it('non-admin — affiche Participate, pas de Delete', () => {
+    cy.intercept('GET', '/api/session', [mockSession]).as('sessions');
     cy.login(false);
 
-    cy.intercept('GET', '/api/session', [mockSession]).as('sessions');
     cy.intercept('GET', '/api/session/1', mockSession).as('sessionDetail');
     cy.intercept('GET', '/api/teacher/1', mockTeacher).as('teacher');
 
@@ -72,9 +70,9 @@ describe('Sessions — détail', () => {
   });
 
   it('admin — supprime la session et revient à la liste', () => {
+    cy.intercept('GET', '/api/session', [mockSession]).as('sessions');
     cy.login(true);
 
-    cy.intercept('GET', '/api/session', [mockSession]).as('sessions');
     cy.intercept('GET', '/api/session/1', mockSession).as('sessionDetail');
     cy.intercept('GET', '/api/teacher/1', mockTeacher).as('teacher');
     cy.intercept('DELETE', '/api/session/1', {}).as('deleteSession');
@@ -84,15 +82,74 @@ describe('Sessions — détail', () => {
 
     cy.url().should('include', '/sessions');
   });
+
+  it('non-admin — bouton back retourne à la liste', () => {
+    cy.intercept('GET', '/api/session', [mockSession]).as('sessions');
+    cy.login(false);
+
+    cy.intercept('GET', '/api/session/1', mockSession).as('sessionDetail');
+    cy.intercept('GET', '/api/teacher/1', mockTeacher).as('teacher');
+
+    cy.contains('Detail').first().click();
+    cy.url().should('include', '/sessions/detail/1');
+
+    cy.get('mat-icon').contains('arrow_back').parents('button').click();
+    cy.url().should('include', '/sessions');
+  });
+
+  it('non-admin — participe à une session', () => {
+    cy.intercept('GET', '/api/session', [mockSession]).as('sessions');
+    cy.login(false);
+
+    const sessionWithUser = { ...mockSession, users: [1] };
+
+    cy.intercept('GET', '/api/session/1', mockSession).as('sessionDetail');
+    cy.intercept('GET', '/api/teacher/1', mockTeacher).as('teacher');
+    cy.intercept('POST', '/api/session/1/participate/1', {}).as('participate');
+
+    cy.contains('Detail').first().click();
+    cy.url().should('include', '/sessions/detail/1');
+    cy.contains('Participate').should('be.visible');
+
+    cy.intercept('GET', '/api/session/1', sessionWithUser).as('sessionDetailAfterParticipate');
+    cy.intercept('GET', '/api/teacher/1', mockTeacher).as('teacherAfter');
+    cy.contains('Participate').click();
+
+    cy.wait('@participate');
+    cy.contains('Do not participate').should('be.visible');
+  });
+
+  it('non-admin — se désinscrit d\'une session', () => {
+    const sessionWithUser = { ...mockSession, users: [1] };
+    const sessionWithoutUser = { ...mockSession, users: [] };
+
+    cy.intercept('GET', '/api/session', [sessionWithUser]).as('sessions');
+    cy.login(false);
+
+    cy.intercept('GET', '/api/session/1', sessionWithUser).as('sessionDetail');
+    cy.intercept('GET', '/api/teacher/1', mockTeacher).as('teacher');
+    cy.intercept('DELETE', '/api/session/1/participate/1', {}).as('unparticipate');
+
+    cy.contains('Detail').first().click();
+    cy.url().should('include', '/sessions/detail/1');
+    cy.contains('Do not participate').should('be.visible');
+
+    cy.intercept('GET', '/api/session/1', sessionWithoutUser).as('sessionDetailAfterUnparticipate');
+    cy.intercept('GET', '/api/teacher/1', mockTeacher).as('teacherAfter');
+    cy.contains('Do not participate').click();
+
+    cy.wait('@unparticipate');
+    cy.contains('Participate').should('be.visible');
+  });
 });
 
 // ─── FORMULAIRE — CRÉATION ───────────────────────────────────────────────────
 
 describe('Sessions — création', () => {
   it('admin — remplit et soumet le formulaire de création', () => {
+    cy.intercept('GET', '/api/session', []).as('sessions');
     cy.login(true);
 
-    cy.intercept('GET', '/api/session', []).as('sessions');
     cy.intercept('GET', '/api/teacher', [mockTeacher]).as('teachers');
     cy.intercept('POST', '/api/session', mockSession).as('createSession');
 
@@ -116,9 +173,9 @@ describe('Sessions — création', () => {
 
 describe('Sessions — modification', () => {
   it('admin — modifie une session existante', () => {
+    cy.intercept('GET', '/api/session', [mockSession]).as('sessions');
     cy.login(true);
 
-    cy.intercept('GET', '/api/session', [mockSession]).as('sessions');
     cy.intercept('GET', '/api/session/1', mockSession).as('sessionDetail');
     cy.intercept('GET', '/api/teacher', [mockTeacher]).as('teachers');
     cy.intercept('PUT', '/api/session/1', { ...mockSession, name: 'Updated Yoga' }).as('updateSession');
