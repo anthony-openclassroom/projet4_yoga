@@ -2,13 +2,14 @@ package com.openclassrooms.starterjwt.security.jwt;
 
 import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -77,10 +78,11 @@ class JwtUtilsTest {
     void validateJwtToken_returnsFalse_forWrongSignature() {
         // SignatureException — token signé avec un secret différent
         String wrongToken = Jwts.builder()
-                .setSubject("test@test.com")
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000L))
-                .signWith(SignatureAlgorithm.HS512, "anotherSecretKeyThatIsCompletelyDifferent1234567890")
+                .subject("test@test.com")
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 86400000L))
+                .signWith(Keys.hmacShaKeyFor(
+                        "anotherSecretKeyThatIsCompletelyDifferentFromMainKey12345678".getBytes(StandardCharsets.UTF_8)))
                 .compact();
 
         assertThat(jwtUtils.validateJwtToken(wrongToken)).isFalse();
@@ -90,10 +92,10 @@ class JwtUtilsTest {
     void validateJwtToken_returnsFalse_forExpiredToken() {
         // ExpiredJwtException — token expiré en 1970
         String expiredToken = Jwts.builder()
-                .setSubject("test@test.com")
-                .setIssuedAt(new Date(0))
-                .setExpiration(new Date(1))
-                .signWith(SignatureAlgorithm.HS512, SECRET)
+                .subject("test@test.com")
+                .issuedAt(new Date(0))
+                .expiration(new Date(1))
+                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8)))
                 .compact();
 
         assertThat(jwtUtils.validateJwtToken(expiredToken)).isFalse();

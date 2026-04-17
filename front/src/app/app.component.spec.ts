@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { expect } from '@jest/globals';
+import { expect, jest } from '@jest/globals';
 import { of } from 'rxjs';
 import { AuthService } from './core/service/auth.service';
 import { SessionService } from './core/service/session.service';
@@ -38,7 +38,7 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     let result = true;
-    app.$isLogged().subscribe(v => (result = v));
+    app.$isLogged().subscribe((v) => (result = v));
     expect(result).toBe(false);
     expect(mockSessionService.$isLogged).toHaveBeenCalled();
   });

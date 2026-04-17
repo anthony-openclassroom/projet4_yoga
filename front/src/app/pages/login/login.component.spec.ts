@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { expect } from '@jest/globals';
+import { expect, jest } from '@jest/globals';
 import { of, throwError } from 'rxjs';
 import { AuthService } from '../../core/service/auth.service';
 import { SessionService } from '../../core/service/session.service';
@@ -17,7 +17,19 @@ describe('LoginComponent', () => {
   };
   const mockRouter = { navigate: jest.fn() };
   const mockAuthService = {
-    login: jest.fn().mockReturnValue(of({ token: '', type: '', id: 1, username: '', firstName: '', lastName: '', admin: false })),
+    login: jest
+      .fn()
+      .mockReturnValue(
+        of({
+          token: '',
+          type: '',
+          id: 1,
+          username: '',
+          firstName: '',
+          lastName: '',
+          admin: false,
+        }),
+      ),
   };
 
   beforeEach(async () => {
@@ -41,7 +53,15 @@ describe('LoginComponent', () => {
   });
 
   it('submit() doit appeler logIn et naviguer vers /sessions en cas de succès', () => {
-    const sessionInfo = { token: 'tok', type: 'Bearer', id: 1, username: 'u@test.com', firstName: 'A', lastName: 'B', admin: false };
+    const sessionInfo = {
+      token: 'tok',
+      type: 'Bearer',
+      id: 1,
+      username: 'u@test.com',
+      firstName: 'A',
+      lastName: 'B',
+      admin: false,
+    };
     mockAuthService.login.mockReturnValue(of(sessionInfo));
 
     component.submit();
@@ -51,8 +71,10 @@ describe('LoginComponent', () => {
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/sessions']);
   });
 
-  it('submit() doit passer onError à true en cas d\'erreur', () => {
-    mockAuthService.login.mockReturnValue(throwError(() => new Error('Unauthorized')));
+  it("submit() doit passer onError à true en cas d'erreur", () => {
+    mockAuthService.login.mockReturnValue(
+      throwError(() => new Error('Unauthorized')),
+    );
 
     component.submit();
 

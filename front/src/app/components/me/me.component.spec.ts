@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { expect } from '@jest/globals';
+import { expect, jest } from '@jest/globals';
 import { of } from 'rxjs';
 import { SessionService } from '../../core/service/session.service';
 import { UserService } from '../../core/service/user.service';
@@ -18,7 +18,19 @@ describe('MeComponent', () => {
   };
 
   const mockUserService = {
-    getById: jest.fn().mockReturnValue(of({ id: 1, admin: true, email: 'test@test.com', firstName: 'John', lastName: 'Doe', createdAt: new Date(), updatedAt: new Date() })),
+    getById: jest
+      .fn()
+      .mockReturnValue(
+        of({
+          id: 1,
+          admin: true,
+          email: 'test@test.com',
+          firstName: 'John',
+          lastName: 'Doe',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }),
+      ),
     delete: jest.fn().mockReturnValue(of(void 0)),
   };
 
@@ -44,7 +56,7 @@ describe('MeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('ngOnInit() doit charger les données de l\'utilisateur connecté', () => {
+  it("ngOnInit() doit charger les données de l'utilisateur connecté", () => {
     expect(mockUserService.getById).toHaveBeenCalledWith('1');
     expect(component.user).toBeDefined();
   });
@@ -62,7 +74,11 @@ describe('MeComponent', () => {
     component.delete();
 
     expect(mockUserService.delete).toHaveBeenCalledWith('1');
-    expect(openSpy).toHaveBeenCalledWith('Your account has been deleted !', 'Close', { duration: 3000 });
+    expect(openSpy).toHaveBeenCalledWith(
+      'Your account has been deleted !',
+      'Close',
+      { duration: 3000 },
+    );
     expect(mockSessionService.logOut).toHaveBeenCalled();
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/']);
   });

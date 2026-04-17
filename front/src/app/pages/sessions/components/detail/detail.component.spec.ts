@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { expect } from '@jest/globals';
+import { expect, jest } from '@jest/globals';
 import { of } from 'rxjs';
 import { SessionService } from '../../../../core/service/session.service';
 import { SessionApiService } from '../../../../core/service/session-api.service';
@@ -14,15 +14,27 @@ describe('DetailComponent', () => {
   let fixture: ComponentFixture<DetailComponent>;
 
   const mockSessionService = {
-    sessionInformation: { admin: true, id: 1 }
+    sessionInformation: { admin: true, id: 1 },
   };
 
   const mockSession = {
-    id: 1, name: 'Test', description: 'desc', date: new Date(),
-    teacher_id: 1, users: [], createdAt: new Date(), updatedAt: new Date()
+    id: 1,
+    name: 'Test',
+    description: 'desc',
+    date: new Date(),
+    teacher_id: 1,
+    users: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
-  const mockTeacher = { id: 1, lastName: 'Doe', firstName: 'John', createdAt: new Date(), updatedAt: new Date() };
+  const mockTeacher = {
+    id: 1,
+    lastName: 'Doe',
+    firstName: 'John',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
 
   const mockSessionApiService = {
     detail: jest.fn().mockReturnValue(of(mockSession)),
@@ -38,7 +50,7 @@ describe('DetailComponent', () => {
   const mockRouter = { navigate: jest.fn() };
 
   const mockActivatedRoute = {
-    snapshot: { paramMap: { get: () => '1' } }
+    snapshot: { paramMap: { get: () => '1' } },
   };
 
   beforeEach(async () => {
@@ -83,7 +95,9 @@ describe('DetailComponent', () => {
     component.delete();
 
     expect(mockSessionApiService.delete).toHaveBeenCalledWith('1');
-    expect(openSpy).toHaveBeenCalledWith('Session deleted !', 'Close', { duration: 3000 });
+    expect(openSpy).toHaveBeenCalledWith('Session deleted !', 'Close', {
+      duration: 3000,
+    });
     expect(mockRouter.navigate).toHaveBeenCalledWith(['sessions']);
   });
 

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { expect } from '@jest/globals';
+import { expect, jest } from '@jest/globals';
 import { of, throwError } from 'rxjs';
 import { AuthService } from '../../core/service/auth.service';
 
@@ -43,8 +43,10 @@ describe('RegisterComponent', () => {
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/login']);
   });
 
-  it('submit() doit passer onError à true en cas d\'erreur', () => {
-    mockAuthService.register.mockReturnValue(throwError(() => new Error('Email already taken')));
+  it("submit() doit passer onError à true en cas d'erreur", () => {
+    mockAuthService.register.mockReturnValue(
+      throwError(() => new Error('Email already taken')),
+    );
 
     component.submit();
 
