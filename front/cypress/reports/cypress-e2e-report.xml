@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Cypress E2E Tests" time="32.208" tests="26" failures="0">
+<testsuite name="Root Suite" timestamp="2026-04-30T12:07:04" tests="0" file="cypress/e2e/sessions.cy.ts" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Sessions — liste" timestamp="2026-04-30T12:07:04" tests="2" time="2.526" failures="0">
+    <testcase name="Sessions — liste utilisateur admin — affiche la liste et le bouton Créer" time="1.303" classname="utilisateur admin — affiche la liste et le bouton Créer">
+    </testcase>
+    <testcase name="Sessions — liste utilisateur non-admin — pas de bouton Créer" time="1.196" classname="utilisateur non-admin — pas de bouton Créer">
+    </testcase>
+  </testsuite>
+  <testsuite name="Sessions — détail" timestamp="2026-04-30T12:07:07" tests="6" time="7.924" failures="0">
+    <testcase name="Sessions — détail admin — affiche le détail et le bouton Delete" time="1.387" classname="admin — affiche le détail et le bouton Delete">
+    </testcase>
+    <testcase name="Sessions — détail non-admin — affiche Participate, pas de Delete" time="1.285" classname="non-admin — affiche Participate, pas de Delete">
+    </testcase>
+    <testcase name="Sessions — détail admin — supprime la session et revient à la liste" time="1.289" classname="admin — supprime la session et revient à la liste">
+    </testcase>
+    <testcase name="Sessions — détail non-admin — bouton back retourne à la liste" time="1.296" classname="non-admin — bouton back retourne à la liste">
+    </testcase>
+    <testcase name="Sessions — détail non-admin — participe à une session" time="1.244" classname="non-admin — participe à une session">
+    </testcase>
+    <testcase name="Sessions — détail non-admin — se désinscrit d&apos;une session" time="1.330" classname="non-admin — se désinscrit d&apos;une session">
+    </testcase>
+  </testsuite>
+  <testsuite name="Sessions — création" timestamp="2026-04-30T12:07:15" tests="1" time="2.583" failures="0">
+    <testcase name="Sessions — création admin — remplit et soumet le formulaire de création" time="2.542" classname="admin — remplit et soumet le formulaire de création">
+    </testcase>
+  </testsuite>
+  <testsuite name="Sessions — modification" timestamp="2026-04-30T12:07:17" tests="1" time="1.820" failures="0">
+    <testcase name="Sessions — modification admin — modifie une session existante" time="1.676" classname="admin — modifie une session existante">
+    </testcase>
+  </testsuite>
+<testsuite name="Root Suite" timestamp="2026-04-30T12:06:44" tests="0" file="cypress/e2e/login.cy.ts" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Login" timestamp="2026-04-30T12:06:44" tests="4" time="3.785" failures="0">
+    <testcase name="Login affiche le formulaire de connexion" time="0.648" classname="affiche le formulaire de connexion">
+    </testcase>
+    <testcase name="Login connexion réussie — redirige vers /sessions" time="1.187" classname="connexion réussie — redirige vers /sessions">
+    </testcase>
+    <testcase name="Login échec de connexion — affiche un message d&apos;erreur" time="1.304" classname="échec de connexion — affiche un message d&apos;erreur">
+    </testcase>
+    <testcase name="Login lien Register dans la navbar — redirige vers /register" time="0.609" classname="lien Register dans la navbar — redirige vers /register">
+    </testcase>
+  </testsuite>
+  <testsuite name="Logout" timestamp="2026-04-30T12:06:48" tests="1" time="1.375" failures="0">
+    <testcase name="Logout déconnexion — redirige vers la page d&apos;accueil" time="1.198" classname="déconnexion — redirige vers la page d&apos;accueil">
+    </testcase>
+  </testsuite>
+<testsuite name="Root Suite" timestamp="2026-04-30T12:06:51" tests="0" file="cypress/e2e/me.cy.ts" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Me — profil utilisateur" timestamp="2026-04-30T12:06:51" tests="3" time="3.965" failures="0">
+    <testcase name="Me — profil utilisateur affiche les informations de l&apos;utilisateur" time="1.401" classname="affiche les informations de l&apos;utilisateur">
+    </testcase>
+    <testcase name="Me — profil utilisateur bouton back revient à la page précédente" time="1.266" classname="bouton back revient à la page précédente">
+    </testcase>
+    <testcase name="Me — profil utilisateur supprime le compte et redirige vers la page d&apos;accueil" time="1.274" classname="supprime le compte et redirige vers la page d&apos;accueil">
+    </testcase>
+  </testsuite>
+  <testsuite name="Me — profil administrateur" timestamp="2026-04-30T12:06:55" tests="1" time="1.387" failures="0">
+    <testcase name="Me — profil administrateur affiche &quot;You are admin&quot; et pas de bouton de suppression" time="1.232" classname="affiche &quot;You are admin&quot; et pas de bouton de suppression">
+    </testcase>
+  </testsuite>
+<testsuite name="Root Suite" timestamp="2026-04-30T12:06:59" tests="0" file="cypress/e2e/register.cy.ts" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Register" timestamp="2026-04-30T12:06:59" tests="3" time="3.694" failures="0">
+    <testcase name="Register affiche le formulaire d&apos;inscription" time="0.549" classname="affiche le formulaire d&apos;inscription">
+    </testcase>
+    <testcase name="Register inscription réussie — redirige vers /login" time="1.579" classname="inscription réussie — redirige vers /login">
+    </testcase>
+    <testcase name="Register échec d&apos;inscription — affiche un message d&apos;erreur" time="1.406" classname="échec d&apos;inscription — affiche un message d&apos;erreur">
+    </testcase>
+  </testsuite>
+<testsuite name="Root Suite" timestamp="2026-04-30T12:06:41" tests="0" file="cypress/e2e/guards.cy.ts" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="AuthGuard — redirection si non connecté" timestamp="2026-04-30T12:06:41" tests="3" time="2.202" failures="0">
+    <testcase name="AuthGuard — redirection si non connecté visite /sessions sans être connecté — redirige vers /login" time="0.821" classname="visite /sessions sans être connecté — redirige vers /login">
+    </testcase>
+    <testcase name="AuthGuard — redirection si non connecté visite /me sans être connecté — redirige vers /login" time="0.665" classname="visite /me sans être connecté — redirige vers /login">
+    </testcase>
+    <testcase name="AuthGuard — redirection si non connecté visite /sessions/create sans être connecté — redirige vers /login" time="0.451" classname="visite /sessions/create sans être connecté — redirige vers /login">
+    </testcase>
+  </testsuite>
+<testsuite name="Root Suite" timestamp="2026-04-30T12:06:57" tests="0" file="cypress/e2e/not-found.cy.ts" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Page Not Found" timestamp="2026-04-30T12:06:57" tests="1" time="0.797" failures="0">
+    <testcase name="Page Not Found affiche la page 404 pour une URL inconnue" time="0.698" classname="affiche la page 404 pour une URL inconnue">
+    </testcase>
+  </testsuite>
+</testsuites>

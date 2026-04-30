@@ -23,6 +23,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -120,6 +121,7 @@ class SessionControllerTest {
         when(sessionMapper.toDto(session)).thenReturn(dto);
 
         mockMvc.perform(post("/api/session")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
@@ -135,6 +137,7 @@ class SessionControllerTest {
         when(sessionMapper.toDto(session)).thenReturn(dto);
 
         mockMvc.perform(put("/api/session/1")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk());
@@ -145,7 +148,7 @@ class SessionControllerTest {
     void delete_returnsOk_whenSessionFound() throws Exception {
         when(sessionService.getById(1L)).thenReturn(buildSession());
 
-        mockMvc.perform(delete("/api/session/1"))
+        mockMvc.perform(delete("/api/session/1").with(csrf()))
                 .andExpect(status().isOk());
     }
 
@@ -154,14 +157,14 @@ class SessionControllerTest {
     void delete_returnsNotFound_whenSessionNull() throws Exception {
         when(sessionService.getById(999L)).thenReturn(null);
 
-        mockMvc.perform(delete("/api/session/999"))
+        mockMvc.perform(delete("/api/session/999").with(csrf()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     @WithMockUser
     void participate_returnsOk() throws Exception {
-        mockMvc.perform(post("/api/session/1/participate/2"))
+        mockMvc.perform(post("/api/session/1/participate/2").with(csrf()))
                 .andExpect(status().isOk());
     }
 
@@ -170,14 +173,14 @@ class SessionControllerTest {
     void participate_returnsBadRequest_whenAlreadyParticipating() throws Exception {
         doThrow(new BadRequestException()).when(sessionService).participate(1L, 1L);
 
-        mockMvc.perform(post("/api/session/1/participate/1"))
+        mockMvc.perform(post("/api/session/1/participate/1").with(csrf()))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     @WithMockUser
     void noLongerParticipate_returnsOk() throws Exception {
-        mockMvc.perform(delete("/api/session/1/participate/2"))
+        mockMvc.perform(delete("/api/session/1/participate/2").with(csrf()))
                 .andExpect(status().isOk());
     }
 
@@ -186,7 +189,7 @@ class SessionControllerTest {
     void noLongerParticipate_returnsBadRequest_whenNotParticipating() throws Exception {
         doThrow(new BadRequestException()).when(sessionService).noLongerParticipate(1L, 1L);
 
-        mockMvc.perform(delete("/api/session/1/participate/1"))
+        mockMvc.perform(delete("/api/session/1/participate/1").with(csrf()))
                 .andExpect(status().isBadRequest());
     }
 }

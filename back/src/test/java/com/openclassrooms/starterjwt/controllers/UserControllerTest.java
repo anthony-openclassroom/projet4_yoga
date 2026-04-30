@@ -14,6 +14,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -85,7 +86,7 @@ class UserControllerTest {
         when(userService.findById(1L)).thenReturn(user);
         when(userService.isOwner(1L, "user@test.com")).thenReturn(true);
 
-        mockMvc.perform(delete("/api/user/1"))
+        mockMvc.perform(delete("/api/user/1").with(csrf()))
                 .andExpect(status().isOk());
     }
 
@@ -96,7 +97,7 @@ class UserControllerTest {
         when(userService.findById(1L)).thenReturn(user);
         when(userService.isOwner(1L, "other@test.com")).thenReturn(false);
 
-        mockMvc.perform(delete("/api/user/1"))
+        mockMvc.perform(delete("/api/user/1").with(csrf()))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -105,7 +106,7 @@ class UserControllerTest {
     void delete_returnsNotFound_whenUserNull() throws Exception {
         when(userService.findById(999L)).thenReturn(null);
 
-        mockMvc.perform(delete("/api/user/999"))
+        mockMvc.perform(delete("/api/user/999").with(csrf()))
                 .andExpect(status().isNotFound());
     }
 }
