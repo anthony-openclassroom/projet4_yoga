@@ -174,17 +174,13 @@ Seuil configuré : **80 %** sur statements, branches, functions et lines.
 
 ### Frontend — Cypress (tests E2E)
 
-Les tests E2E nécessitent que le **backend et le frontend soient démarrés**.
+Les tests E2E mockent toutes les requêtes API avec `cy.intercept` : **le backend n'est pas nécessaire**. La commande `e2e:ci` démarre le serveur Angular automatiquement.
 
 ```bash
-# Terminal 1 — démarrer le backend
-cd back && mvn spring-boot:run
+cd front
 
-# Terminal 2 — démarrer le frontend
-cd front && npm run start
-
-# Terminal 3 — lancer les tests E2E
-cd front && npm run e2e:ci
+# Lancer les tests E2E (démarre le serveur Angular automatiquement)
+npm run e2e:ci
 ```
 
 Générer le rapport de couverture E2E (après l'exécution des tests) :
@@ -197,8 +193,16 @@ npm run e2e:coverage
 Ouvrir le rapport :
 
 ```
-front/coverage/lcov-report/index.html
+front/coverage/e2e/lcov-report/index.html
 ```
+
+Générer le rapport JUnit XML (artefact CI) :
+
+```bash
+cd front && ./node_modules/.bin/cypress run --reporter junit --reporter-options "mochaFile=cypress/reports/results-[hash].xml"
+```
+
+Le rapport consolidé est disponible dans `front/cypress/reports/`.
 
 Ouvrir Cypress en mode interactif (pour déboguer) :
 
@@ -230,4 +234,4 @@ npm run cypress:open
 | Rapport Jest                 | `coverage/jest/lcov-report/index.html`                     |
 | Tests E2E (headless)         | `npm run e2e:ci`                                           |
 | Tests E2E (interactif)       | `npm run cypress:open`                                     |
-| Rapport E2E                  | `npm run e2e:coverage` → `coverage/lcov-report/index.html` |
+| Rapport E2E                  | `npm run e2e:coverage` → `coverage/e2e/lcov-report/index.html` |

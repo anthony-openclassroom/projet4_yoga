@@ -1,48 +1,89 @@
-# Yoga
+# Yoga App — Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.16.
+Angular 19 · port `4200`
 
-## Start the project
+---
 
-Git clone:
+## Prérequis
 
-> git clone https://github.com/OpenClassrooms-Student-Center/P5-Full-Stack-testing
+| Outil   | Version minimale |
+| ------- | ---------------- |
+| Node.js | 18+              |
+| npm     | 9+               |
 
-Go inside folder:
+---
 
-> cd yoga
+## Installation
 
-Install dependencies:
+```bash
+npm install
+```
 
-> npm install
+---
 
-Launch Front-end:
+## Démarrage
 
-> npm run start;
+```bash
+npm run start
+```
 
+L'application est disponible sur `http://localhost:4200`.
 
-### Test
+> Le backend doit être démarré pour que le frontend fonctionne correctement.
 
-#### E2E
+---
 
-Launching e2e test:
+## Tests unitaires (Jest)
 
-> npm run e2e
+```bash
+# Lancer les tests une fois
+npm test
 
-Generate coverage report (you should launch e2e test before):
+# Mode watch
+npm run test:watch
 
-> npm run e2e:coverage
+# Avec rapport de couverture
+npm test -- --coverage
+```
 
-Report is available here:
+Rapport de couverture :
 
-> front/coverage/lcov-report/index.html
+```
+coverage/jest/lcov-report/index.html
+```
 
-#### Unitary test
+Seuil configuré : **80 %** sur statements, branches, functions et lines.
 
-Launching test:
+---
 
-> npm run test
+## Tests E2E (Cypress)
 
-for following change:
+Les tests mockent toutes les requêtes API avec `cy.intercept` : **le backend n'est pas nécessaire**. La commande `e2e:ci` démarre le serveur Angular automatiquement.
 
-> npm run test:watch
+```bash
+# Lancer les tests en mode headless
+npm run e2e:ci
+
+# Ouvrir Cypress en mode interactif
+npm run cypress:open
+```
+
+### Rapport de couverture E2E
+
+```bash
+npm run e2e:coverage
+```
+
+Rapport disponible dans :
+
+```
+coverage/e2e/lcov-report/index.html
+```
+
+### Rapport JUnit XML (artefact CI)
+
+```bash
+./node_modules/.bin/cypress run --reporter junit --reporter-options "mochaFile=cypress/reports/results-[hash].xml"
+```
+
+Rapport consolidé dans `cypress/reports/`.
