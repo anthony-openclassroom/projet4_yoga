@@ -32,7 +32,13 @@ yarn-error.log
 /.angular/cache
 .sass-cache/
 /connect.lock
-/coverage
+/coverage/**
+!/coverage/jest/
+!/coverage/jest/lcov-report/
+!/coverage/jest/lcov-report/**
+!/coverage/e2e/
+!/coverage/e2e/lcov-report/
+!/coverage/e2e/lcov-report/**
 /.nyc_output
 /libpeerconnection.log
 testem.log

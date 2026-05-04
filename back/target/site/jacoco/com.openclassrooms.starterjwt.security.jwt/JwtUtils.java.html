@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">yoga-app</a> &gt; <a href="index.source.html" class="el_package">com.openclassrooms.starterjwt.security.jwt</a> &gt; <span class="el_source">JwtUtils.java</span></div><h1>JwtUtils.java</h1><pre class="source lang-java linenums">package com.openclassrooms.starterjwt.security.jwt;
+
+import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+
+<span class="fc" id="L19">@Slf4j</span>
+@Component
+<span class="fc" id="L21">public class JwtUtils {</span>
+    @Value(&quot;${oc.app.jwtSecret}&quot;)
+    private String jwtSecret;
+
+    @Value(&quot;${oc.app.jwtExpirationMs}&quot;)
+    private int jwtExpirationMs;
+
+    private SecretKey getSigningKey() {
+<span class="fc" id="L29">        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));</span>
+    }
+
+    public String generateJwtToken(Authentication authentication) {
+<span class="fc" id="L33">        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();</span>
+
+<span class="fc" id="L35">        return Jwts.builder()</span>
+<span class="fc" id="L36">                .subject(userPrincipal.getUsername())</span>
+<span class="fc" id="L37">                .issuedAt(new Date())</span>
+<span class="fc" id="L38">                .expiration(new Date((new Date()).getTime() + jwtExpirationMs))</span>
+<span class="fc" id="L39">                .signWith(getSigningKey())</span>
+<span class="fc" id="L40">                .compact();</span>
+    }
+
+    public String getUserNameFromJwtToken(String token) {
+<span class="fc" id="L44">        return Jwts.parser()</span>
+<span class="fc" id="L45">                .verifyWith(getSigningKey())</span>
+<span class="fc" id="L46">                .build()</span>
+<span class="fc" id="L47">                .parseSignedClaims(token)</span>
+<span class="fc" id="L48">                .getPayload()</span>
+<span class="fc" id="L49">                .getSubject();</span>
+    }
+
+    public boolean validateJwtToken(String authToken) {
+        try {
+<span class="fc" id="L54">            Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(authToken);</span>
+<span class="fc" id="L55">            return true;</span>
+<span class="fc" id="L56">        } catch (SignatureException e) {</span>
+<span class="fc" id="L57">            log.error(&quot;Invalid JWT signature: {}&quot;, e.getMessage());</span>
+<span class="fc" id="L58">        } catch (MalformedJwtException e) {</span>
+<span class="fc" id="L59">            log.error(&quot;Invalid JWT token: {}&quot;, e.getMessage());</span>
+<span class="fc" id="L60">        } catch (ExpiredJwtException e) {</span>
+<span class="fc" id="L61">            log.error(&quot;JWT token is expired: {}&quot;, e.getMessage());</span>
+<span class="nc" id="L62">        } catch (UnsupportedJwtException e) {</span>
+<span class="nc" id="L63">            log.error(&quot;JWT token is unsupported: {}&quot;, e.getMessage());</span>
+<span class="fc" id="L64">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L65">            log.error(&quot;JWT claims string is empty: {}&quot;, e.getMessage());</span>
+        }
+<span class="fc" id="L67">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
