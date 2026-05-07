@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { expect, jest } from '@jest/globals';
 import { of } from 'rxjs';
 import { SessionService } from '../../../../core/service/session.service';
@@ -49,13 +49,13 @@ function buildProviders(url: string, admin: boolean) {
 describe('FormComponent — mode création', () => {
   let component: FormComponent;
   let fixture: ComponentFixture<FormComponent>;
-  let mockRouter: any;
-  let mockSessionApiService: any;
+  let mockRouter: { navigate: jest.Mock; url: string };
+  let mockSessionApiService: { detail: jest.Mock; create: jest.Mock; update: jest.Mock };
 
   beforeEach(async () => {
     const providers = buildProviders('/sessions/create', true);
-    mockRouter = providers[3].useValue;
-    mockSessionApiService = providers[1].useValue;
+    mockRouter = providers[3].useValue as { navigate: jest.Mock; url: string };
+    mockSessionApiService = providers[1].useValue as { detail: jest.Mock; create: jest.Mock; update: jest.Mock };
 
     await TestBed.configureTestingModule({
       imports: [FormComponent],
@@ -79,7 +79,7 @@ describe('FormComponent — mode création', () => {
 
   it('submit() doit appeler sessionApiService.create() et rediriger', () => {
     const snackBar = fixture.debugElement.injector.get(MatSnackBar);
-    const openSpy = jest.spyOn(snackBar, 'open').mockReturnValue({} as any);
+    const openSpy = jest.spyOn(snackBar, 'open').mockReturnValue({} as MatSnackBarRef<TextOnlySnackBar>);
 
     component.sessionForm!.setValue({
       name: 'Test',
@@ -102,13 +102,13 @@ describe('FormComponent — mode création', () => {
 describe('FormComponent — mode modification', () => {
   let component: FormComponent;
   let fixture: ComponentFixture<FormComponent>;
-  let mockRouter: any;
-  let mockSessionApiService: any;
+  let mockRouter: { navigate: jest.Mock; url: string };
+  let mockSessionApiService: { detail: jest.Mock; create: jest.Mock; update: jest.Mock };
 
   beforeEach(async () => {
     const providers = buildProviders('/sessions/update/1', true);
-    mockRouter = providers[3].useValue;
-    mockSessionApiService = providers[1].useValue;
+    mockRouter = providers[3].useValue as { navigate: jest.Mock; url: string };
+    mockSessionApiService = providers[1].useValue as { detail: jest.Mock; create: jest.Mock; update: jest.Mock };
 
     await TestBed.configureTestingModule({
       imports: [FormComponent],
@@ -128,7 +128,7 @@ describe('FormComponent — mode modification', () => {
 
   it('submit() doit appeler sessionApiService.update() et rediriger', () => {
     const snackBar = fixture.debugElement.injector.get(MatSnackBar);
-    const openSpy = jest.spyOn(snackBar, 'open').mockReturnValue({} as any);
+    const openSpy = jest.spyOn(snackBar, 'open').mockReturnValue({} as MatSnackBarRef<TextOnlySnackBar>);
 
     component.submit();
 
@@ -146,11 +146,11 @@ describe('FormComponent — mode modification', () => {
 // ─── UTILISATEUR NON-ADMIN ──────────────────────────────────────────────────
 
 describe('FormComponent — utilisateur non-admin', () => {
-  let mockRouter: any;
+  let mockRouter: { navigate: jest.Mock; url: string };
 
   beforeEach(async () => {
     const providers = buildProviders('/sessions/create', false);
-    mockRouter = providers[3].useValue;
+    mockRouter = providers[3].useValue as { navigate: jest.Mock; url: string };
 
     await TestBed.configureTestingModule({
       imports: [FormComponent],
